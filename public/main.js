@@ -99,35 +99,35 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, swordIm
     //
     // Create buffer
     //
-    let boxVertexBufferObject = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, boxVertexBufferObject);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxVertices), gl.STATIC_DRAW);
+    // let boxVertexBufferObject = gl.createBuffer();
+    // gl.bindBuffer(gl.ARRAY_BUFFER, boxVertexBufferObject);
+    // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxVertices), gl.STATIC_DRAW);
 
-    let boxTexCoordVertexBufferObject = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, boxTexCoordVertexBufferObject);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxTextureCoords), gl.STATIC_DRAW);
+    // let boxTexCoordVertexBufferObject = gl.createBuffer();
+    // gl.bindBuffer(gl.ARRAY_BUFFER, boxTexCoordVertexBufferObject);
+    // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxTextureCoords), gl.STATIC_DRAW);
 
-    let boxIndexBufferObject = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, boxIndexBufferObject);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(boxIndices), gl.STATIC_DRAW);
+    // let boxIndexBufferObject = gl.createBuffer();
+    // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, boxIndexBufferObject);
+    // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(boxIndices), gl.STATIC_DRAW);
 
-    // let swordVertexes = swordModel.meshes[0].vertexes;
-    // let swordIndices = [].concat.apply([], swordModel.meshes[0].faces);
-    // let swordTextureCoords = swordModel.meshes[0].texturecoords[0];
-    //
-    // let swordVertexBufferObject = gl.createBuffer();
-    // gl.bindBuffer(gl.ARRAY_BUFFER, swordVertexBufferObject);
-    // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(swordVertexes), gl.STATIC_DRAW);
-    //
-    // let swordTexCoordVertexBufferObject = gl.createBuffer();
-    // gl.bindBuffer(gl.ARRAY_BUFFER, swordTexCoordVertexBufferObject);
-    // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(swordTextureCoords), gl.STATIC_DRAW);
-    //
-    // let swordIndexBufferObject = gl.createBuffer();
-    // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, swordIndexBufferObject);
-    // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(swordIndices), gl.STATIC_DRAW);
+    let bladeVertices = swordModel.meshes[3].vertices;
+    let bladeIndices = [].concat.apply([], swordModel.meshes[3].faces);
+    let bladeTextureCoords = swordModel.meshes[3].texturecoords[0];
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, boxVertexBufferObject);
+    let bladeVertexBufferObject = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bladeVertexBufferObject);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bladeVertices), gl.STATIC_DRAW);
+
+    let bladeTexCoordVertexBufferObject = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bladeTexCoordVertexBufferObject);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bladeTextureCoords), gl.STATIC_DRAW);
+
+    let bladeIndexBufferObject = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bladeIndexBufferObject);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(bladeIndices), gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, bladeVertexBufferObject);
     let positionAttribLocation = gl.getAttribLocation(program, 'vertPosition');
     gl.vertexAttribPointer(
         positionAttribLocation, // Attribute location
@@ -139,7 +139,7 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, swordIm
     );
     gl.enableVertexAttribArray(positionAttribLocation);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, boxTexCoordVertexBufferObject);
+    gl.bindBuffer(gl.ARRAY_BUFFER, bladeTexCoordVertexBufferObject);
     let textureCoordAttribLocation = gl.getAttribLocation(program, 'vertTextureCoord');
     gl.vertexAttribPointer(
         textureCoordAttribLocation, // Attribute location
@@ -177,7 +177,7 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, swordIm
     gl.texImage2D(
         gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
         gl.UNSIGNED_BYTE,
-        boxImg
+        swordImg
     );
     gl.bindTexture(gl.TEXTURE_2D, null);
 
@@ -195,7 +195,7 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, swordIm
 
     glMatrix.mat4.identity(identityMatrix);
     glMatrix.mat4.identity(worldMatrix);
-    glMatrix.mat4.lookAt(viewMatrix, [0, 5, 10], [0, 0, 0], [0, 1, 0]);
+    glMatrix.mat4.lookAt(viewMatrix, [0, 5, 80], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.height / canvas.width, 0.1, 1000);
 
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
@@ -217,7 +217,7 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, swordIm
         gl.bindTexture(gl.TEXTURE_2D, swordTexture);
         gl.activeTexture(gl.TEXTURE0);
 
-        gl.drawElements(gl.TRIANGLES, boxIndices.length, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.TRIANGLES, bladeIndices.length, gl.UNSIGNED_SHORT, 0);
         requestAnimationFrame(loop)
     };
     requestAnimationFrame(loop);
