@@ -25,8 +25,8 @@ const sphere = {
                 const cos_loops = Math.cos(loop_angle);
                 const sin_loops = Math.sin(loop_angle);
 
-                const z = 5 + slice_rad * cos_loops;
-                const x = 5 + slice_rad * sin_loops;
+                const z = 4 + slice_rad * cos_loops;
+                const x = 4 + slice_rad * sin_loops;
                 const y = this.inner_rad * sin_slices;
 
                 this.vertices.push(x, y, z);
