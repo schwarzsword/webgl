@@ -11,12 +11,12 @@ let initScene = function () {
                     alert('Fatal error getting fragment shader (see console)');
                     console.error(fsErr);
                 } else {
-                    loadJSONResource('./sword.json', function (modelErr, swordModel) {
+                    loadJSONResource('./Susan.json', function (modelErr, model) {
                         if (modelErr) {
                             alert('Fatal error getting sword model (see console)');
                             console.error(fsErr);
                         } else {
-                            loadImage('./swordTexture.png', function (imgErr, swordImg) {
+                            loadImage('./SusanTexture.png', function (imgErr, modelImg) {
                                 if (imgErr) {
                                     alert('Fatal error getting sword texture (see console)');
                                     console.error(imgErr);
@@ -26,7 +26,21 @@ let initScene = function () {
                                             alert('Fatal error getting box texture (see console)');
                                             console.error(imgErr);
                                         } else {
-                                            startScene(vsText, fsText, boxImg, swordImg, swordModel);
+                                            loadImage('./torus.jpg', function (imgErr, torusImg) {
+                                                if (imgErr) {
+                                                    alert('Fatal error getting box texture (see console)');
+                                                    console.error(imgErr);
+                                                } else {
+                                                    loadImage('./ball.jpg', function (imgErr, ballImg) {
+                                                        if (imgErr) {
+                                                            alert('Fatal error getting box texture (see console)');
+                                                            console.error(imgErr);
+                                                        } else {
+                                                            startScene(vsText, fsText, boxImg, modelImg, model, torusImg, ballImg);
+                                                        }
+                                                    });
+                                                }
+                                            });
                                         }
                                     });
                                 }
@@ -39,8 +53,8 @@ let initScene = function () {
     });
 }
 
-let startScene = function (vertexShaderText, fragmentShaderText, boxImg, swordImg, swordModel) {
-    console.log('This is working');
+let startScene = function (vertexShaderText, fragmentShaderText, boxImg, modelImage, model, torusImg, ballImg) {
+    let imageForTexture = ballImg;
 
     let canvas = document.getElementById('scene');
     gl = canvas.getContext('webgl');
@@ -99,35 +113,45 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, swordIm
     //
     // Create buffer
     //
-    // let boxVertexBufferObject = gl.createBuffer();
-    // gl.bindBuffer(gl.ARRAY_BUFFER, boxVertexBufferObject);
-    // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxVertices), gl.STATIC_DRAW);
 
-    // let boxTexCoordVertexBufferObject = gl.createBuffer();
-    // gl.bindBuffer(gl.ARRAY_BUFFER, boxTexCoordVertexBufferObject);
-    // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxTextureCoords), gl.STATIC_DRAW);
+    // let modelVertices = model.meshes[0].vertices;
+    // let modelIndices = [].concat.apply([], model.meshes[0].faces);
+    // let modelTextureCoords = model.meshes[0].texturecoords[0];
+    // let modelNormals = model.meshes[0].normals;
 
-    // let boxIndexBufferObject = gl.createBuffer();
-    // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, boxIndexBufferObject);
-    // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(boxIndices), gl.STATIC_DRAW);
+    // let modelVertices = boxVertices;
+    // let modelIndices = boxIndices;
+    // let modelTextureCoords = boxTextureCoords;
+    // let modelNormals = boxNormals;
 
-    let bladeVertices = swordModel.meshes[3].vertices;
-    let bladeIndices = [].concat.apply([], swordModel.meshes[3].faces);
-    let bladeTextureCoords = swordModel.meshes[3].texturecoords[0];
+    // let modelVertices = torus.vertices;
+    // let modelIndices = torus.indices;
+    // let modelTextureCoords = torus.texCoords;
+    // let modelNormals = torus.normals;
 
-    let bladeVertexBufferObject = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bladeVertexBufferObject);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bladeVertices), gl.STATIC_DRAW);
+    let modelVertices = sphere.vertices;
+    let modelIndices = sphere.indices;
+    let modelTextureCoords = sphere.texCoords;
+    let modelNormals = sphere.normals;
 
-    let bladeTexCoordVertexBufferObject = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bladeTexCoordVertexBufferObject);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bladeTextureCoords), gl.STATIC_DRAW);
+    let modelVertexBufferObject = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexBufferObject);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(modelVertices), gl.STATIC_DRAW);
 
-    let bladeIndexBufferObject = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bladeIndexBufferObject);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(bladeIndices), gl.STATIC_DRAW);
+    let modelTexCoordVertexBufferObject = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, modelTexCoordVertexBufferObject);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(modelTextureCoords), gl.STATIC_DRAW);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, bladeVertexBufferObject);
+    let modelNormalsBufferObject = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, modelNormalsBufferObject);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(modelNormals), gl.STATIC_DRAW);
+
+    let modelIndexBufferObject = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, modelIndexBufferObject);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(modelIndices), gl.STATIC_DRAW);
+
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, modelVertexBufferObject);
     let positionAttribLocation = gl.getAttribLocation(program, 'vertPosition');
     gl.vertexAttribPointer(
         positionAttribLocation, // Attribute location
@@ -139,36 +163,36 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, swordIm
     );
     gl.enableVertexAttribArray(positionAttribLocation);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, bladeTexCoordVertexBufferObject);
-    let textureCoordAttribLocation = gl.getAttribLocation(program, 'vertTextureCoord');
+    gl.bindBuffer(gl.ARRAY_BUFFER, modelTexCoordVertexBufferObject);
+    let texCoordAttribLocation = gl.getAttribLocation(program, 'vertTexCoord');
     gl.vertexAttribPointer(
-        textureCoordAttribLocation, // Attribute location
+        texCoordAttribLocation, // Attribute location
         2, // Number of elements per attribute
         gl.FLOAT, // Type of elements
         gl.FALSE,
         2 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
-        0 // Offset from the beginning of a single vertex to this attribute
+        0
     );
-    gl.enableVertexAttribArray(textureCoordAttribLocation);
+    gl.enableVertexAttribArray(texCoordAttribLocation);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, modelNormalsBufferObject);
+    let normalAttribLocation = gl.getAttribLocation(program, 'vertNormal');
+    gl.vertexAttribPointer(
+        normalAttribLocation,
+        3,
+        gl.FLOAT,
+        gl.TRUE,
+        3 * Float32Array.BYTES_PER_ELEMENT,
+        0
+    );
+    gl.enableVertexAttribArray(normalAttribLocation);
 
     //
     // Create texture
     //
-    // let boxTexture = gl.createTexture();
-    // gl.bindTexture(gl.TEXTURE_2D, boxTexture);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    // gl.texImage2D(
-    //     gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
-    //     gl.UNSIGNED_BYTE,
-    //     boxImg
-    // );
-    // gl.bindTexture(gl.TEXTURE_2D, null);
 
-    let swordTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, swordTexture);
+    let modelTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, modelTexture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -177,7 +201,7 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, swordIm
     gl.texImage2D(
         gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
         gl.UNSIGNED_BYTE,
-        swordImg
+        imageForTexture
     );
     gl.bindTexture(gl.TEXTURE_2D, null);
 
@@ -195,12 +219,27 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, swordIm
 
     glMatrix.mat4.identity(identityMatrix);
     glMatrix.mat4.identity(worldMatrix);
-    glMatrix.mat4.lookAt(viewMatrix, [0, 5, 80], [0, 0, 0], [0, 1, 0]);
+    glMatrix.mat4.lookAt(viewMatrix, [0, 10, 30], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.height / canvas.width, 0.1, 1000);
+    // glMatrix.mat4.rotate(worldMatrix, identityMatrix, 2, [-1, 0, 0]);
+
 
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
     gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
     gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
+
+
+    //
+    // Lighting information
+    //
+
+    let ambientUniformLocation = gl.getUniformLocation(program, 'ambientLightIntensity');
+    let sunlightDirUniformLocation = gl.getUniformLocation(program, 'sun.direction');
+    let sunlightIntUniformLocation = gl.getUniformLocation(program, 'sun.color');
+
+    gl.uniform3f(ambientUniformLocation, 0.1, 0.1, 0.1);
+    gl.uniform3f(sunlightDirUniformLocation, 7.0, 7.0, 7.0);
+    gl.uniform3f(sunlightIntUniformLocation, 0.7, 0.7, 0.7);
 
     //
     // Main render loop
@@ -214,10 +253,10 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, swordIm
         gl.clearColor(1, 1, 1, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        gl.bindTexture(gl.TEXTURE_2D, swordTexture);
+        gl.bindTexture(gl.TEXTURE_2D, modelTexture);
         gl.activeTexture(gl.TEXTURE0);
 
-        gl.drawElements(gl.TRIANGLES, bladeIndices.length, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.TRIANGLES, modelIndices.length, gl.UNSIGNED_SHORT, 0);
         requestAnimationFrame(loop)
     };
     requestAnimationFrame(loop);
