@@ -3,12 +3,11 @@ const torus = {
     loops: 20,
     inner_rad: 0.5,
     outerRad: 1.5,
+    vertices: [],
+    indices: [],
+    normals: [],
+    texCoords: [],
     makeVerts() {
-        this.vertices = [];
-        this.indices = [];
-        this.normals = [];
-        this.texCoords = [];
-
         for (let slice = 0; slice <= this.slices; ++slice) {
             const v = slice / this.slices;
             const slice_angle = v * 2 * Math.PI;
@@ -69,4 +68,3 @@ const torus = {
         //this.indices = undefined;
     },
 };
-torus.makeVerts();

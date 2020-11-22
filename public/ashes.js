@@ -1,21 +1,12 @@
 const ashes = {
-    slices: 20,
-    loops: 20,
-    inner_rad: 3,
-    outerRad: 0.1,
+    layers: 360,
+    particles: 100,
+    rad: 20,
+    vertices: [],
+    indices: [],
+    normals: [],
     makeVerts() {
-        this.vertices = [];
-        this.indices = [];
-        this.normals = [];
-        this.texCoords = [];
-
-        for (let slice = 0; slice <= this.slices; ++slice) {
-            const v = slice / this.slices;
-            const slice_angle = v * 2 * Math.PI;
-            const cos_slices = Math.cos(slice_angle);
-            const sin_slices = Math.sin(slice_angle);
-            const slice_rad = this.outerRad + this.inner_rad * cos_slices;
-
+        for (let layer = 0; layer <= this.layers; ++layer) {
             for (let loop = 0; loop <= this.loops; ++loop) {
                 //   x=(R+r·cos(v))cos(w)
                 //   y=(R+r·cos(v))sin(w)
@@ -35,15 +26,8 @@ const ashes = {
                     sin_loops * sin_slices,
                     cos_slices);
 
-                this.texCoords.push(u);
-                this.texCoords.push(v);
             }
         }
-
-
-        // 0  1  2  3  4  5
-        // 6  7  8  9  10 11
-        // 12 13 14 15 16 17
 
         const vertsPerSlice = this.loops + 1;
         for (let i = 0; i < this.slices; ++i) {
@@ -67,4 +51,4 @@ const ashes = {
         //this.indices = undefined;
     },
 };
-sphere.makeVerts();
+ashes.makeVerts();
