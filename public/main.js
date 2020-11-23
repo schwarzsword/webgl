@@ -124,9 +124,9 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, modelIm
 
     glMatrix.mat4.identity(identityMatrix);
     glMatrix.mat4.identity(worldMatrix);
-    let eye = [40 * Math.sin(angle * Math.PI / 180), 15, 40 * Math.cos(angle * Math.PI / 180)]
+    let eye = [40 * Math.sin(angle * Math.PI / 180), 10, 40 * Math.cos(angle * Math.PI / 180)]
     glMatrix.mat4.lookAt(viewMatrix, eye, [0, 0, 0], [0, 1, 0]);
-    glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.height / canvas.width, 0.1, 1000);
+    glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(90), canvas.height / canvas.width, 0.1, 1000);
 
 
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
@@ -488,6 +488,7 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, modelIm
                 let ashesVert = ashes.vertices;
                 let ashesInd = ashes.indices;
                 let ashesNorm = ashes.normals;
+                let ashesColor = ashes.colors;
 
                 let ashesVertexBufferObject = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, ashesVertexBufferObject);
@@ -495,7 +496,7 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, modelIm
 
                 let ashesNormalsBufferObject = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, ashesNormalsBufferObject);
-                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(ashesNorm), gl.STATIC_DRAW);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(ashesColor), gl.STATIC_DRAW);
 
                 let ashesIndexBufferObject = gl.createBuffer();
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ashesIndexBufferObject);

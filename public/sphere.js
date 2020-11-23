@@ -16,9 +16,6 @@ const sphere = {
             const slice_rad = this.outerRad + this.inner_rad * cos_slices;
 
             for (let loop = 0; loop <= this.loops; ++loop) {
-                //   x=(R+r·cos(v))cos(w)
-                //   y=(R+r·cos(v))sin(w)
-                //             z=r.sin(v)
                 const u = loop / this.loops;
                 const loop_angle = u * 2 * Math.PI;
                 const cos_loops = Math.cos(loop_angle);
