@@ -1,4 +1,58 @@
 let gl;
+let v = 45;
+let h = 10;
+let d = 40;
+let a = 0;
+let sunX = 7;
+let sunY = 7;
+let sunZ = 7;
+let sunR = 0.7;
+let sunG = 0.7;
+let sunB = 0.7;
+let centerX = 0;
+let centerY = 0;
+let centerZ = 0;
+
+let setV = function () {
+    v = document.getElementById("view").value;
+}
+let setD = function () {
+    d = document.getElementById("distance").value;
+}
+let setH = function () {
+    h = document.getElementById("height").value;
+}
+let setA = function () {
+    a = document.getElementById("angle").value;
+}
+let setSunX = function () {
+    sunX = document.getElementById("sunXInput").value;
+}
+let setSunY = function () {
+    sunY = document.getElementById("sunYInput").value;
+}
+let setSunZ = function () {
+    sunZ = document.getElementById("sunZInput").value;
+}
+let setSunR = function () {
+    sunR = document.getElementById("sunRInput").value;
+}
+let setSunG = function () {
+    sunG = document.getElementById("sunGInput").value;
+}
+let setSunB = function () {
+    sunB = document.getElementById("sunBInput").value;
+}
+let setCenterX = function () {
+    centerX = document.getElementById("centerXInput").value;
+}
+let setCenterY = function () {
+    centerY = document.getElementById("centerYInput").value;
+}
+let setCenterZ = function () {
+    centerZ = document.getElementById("centerZInput").value;
+}
+
 
 let initScene = function () {
     loadTextResource('./shader.vs.glsl', function (vsErr, vsText) {
@@ -36,7 +90,7 @@ let initScene = function () {
                                                             alert('Fatal error getting box texture (see console)');
                                                             console.error(imgErr);
                                                         } else {
-                                                            startScene(vsText, fsText, boxImg, modelImg, model, torusImg, ballImg, 0);
+                                                            startScene(vsText, fsText, boxImg, modelImg, model, torusImg, ballImg);
                                                         }
                                                     });
                                                 }
@@ -56,7 +110,7 @@ let initScene = function () {
     ashes.makeVerts();
 }
 
-let startScene = function (vertexShaderText, fragmentShaderText, boxImg, modelImage, model, torusImg, ballImg, angle) {
+let startScene = function (vertexShaderText, fragmentShaderText, boxImg, modelImage, model, torusImg, ballImg) {
     let canvas = document.getElementById('scene');
     gl = canvas.getContext('webgl');
 
@@ -124,9 +178,9 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, modelIm
 
     glMatrix.mat4.identity(identityMatrix);
     glMatrix.mat4.identity(worldMatrix);
-    let eye = [40 * Math.sin(angle * Math.PI / 180), 10, 40 * Math.cos(angle * Math.PI / 180)]
-    glMatrix.mat4.lookAt(viewMatrix, eye, [0, 0, 0], [0, 1, 0]);
-    glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(90), canvas.height / canvas.width, 0.1, 1000);
+    let eye = [d * Math.sin(a * Math.PI / 180), h, d * Math.cos(a * Math.PI / 180)]
+    glMatrix.mat4.lookAt(viewMatrix, eye, [centerX, centerZ, centerY], [0, 1, 0]);
+    glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(v), canvas.height / canvas.width, 0.1, 1000);
 
 
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
@@ -143,8 +197,8 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, modelIm
         let sunlightIntUniformLocation = gl.getUniformLocation(program, 'sun.color');
 
         gl.uniform3f(ambientUniformLocation, 0.1, 0.1, 0.1);
-        gl.uniform3f(sunlightDirUniformLocation, 7.0, 7.0, 7.0);
-        gl.uniform3f(sunlightIntUniformLocation, 0.7, 0.7, 0.7);
+        gl.uniform3f(sunlightDirUniformLocation, sunX, sunZ, sunY);
+        gl.uniform3f(sunlightIntUniformLocation, sunR, sunG, sunB);
     }
 
     let draw = function (vertexShaderText, fragmentShaderText, boxImg, modelImage, model, torusImg, ballImg) {
@@ -535,11 +589,8 @@ let startScene = function (vertexShaderText, fragmentShaderText, boxImg, modelIm
 
     draw(vertexShaderText, fragmentShaderText, boxImg, modelImage, model, torusImg, ballImg);
 
-    if (angle < 360) {
 
-        angle++;
-        setTimeout(() =>
-            startScene(vertexShaderText, fragmentShaderText, boxImg, modelImage, model, torusImg, ballImg, angle),
-            40)
-    }
+    setTimeout(() =>
+            startScene(vertexShaderText, fragmentShaderText, boxImg, modelImage, model, torusImg, ballImg),
+        40);
 };

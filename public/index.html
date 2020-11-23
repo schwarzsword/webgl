@@ -5,9 +5,55 @@
     <title>Cherny lab2</title>
 </head>
 <body onload="initScene();">
-<canvas id="scene" width="700" height="700">
+<canvas id="scene" width="700" height="700" style="display: inline-block">
     Your browser doesn't support HTML5
 </canvas>
+<div style="display: inline-block">
+    <div>
+        <div>set height:
+            <input type="range" min="-50" max="50" value="10" class="slider" id="height" oninput="setH()">
+        </div>
+        <div>set distance:
+            <input type="range" min="1" max="100" value="30" class="slider" id="distance" oninput="setD()">
+        </div>
+        <div>set angle:
+            <input type="range" min="0" max="359" value="0" class="slider" id="angle" oninput="setA()">
+        </div>
+        <div>set view:
+            <input type="range" min="0" max="180" value="45" class="slider" id="view" oninput="setV()">
+        </div>
+    </div>
+    <div>head:
+        <div>left-right:
+            <input type="range" min="-20" max="20" value="0" class="slider" id="centerXInput" oninput="setCenterX()">
+        </div>
+        <div>up-down:
+            <input type="range" min="-20" max="20" value="0" class="slider" id="centerZInput" oninput="setCenterZ()">
+        </div>
+    </div>
+    <div>Sun position:
+        <div>set sunX:
+            <input type="range" min="1" max="20" value="7" class="slider" id="sunXInput" oninput="setSunX()">
+        </div>
+        <div>set sunY:
+            <input type="range" min="1" max="20" value="7" class="slider" id="sunYInput" oninput="setSunY()">
+        </div>
+        <div>set sunZ:
+            <input type="range" min="-10" max="10" value="7" class="slider" id="sunZInput" oninput="setSunZ()">
+        </div>
+    </div>
+    <div>Sun:
+        <div>set sunR:
+            <input type="range" min="0" max="1" value="0.7" class="slider" id="sunRInput" step="0.05" oninput="setSunR()">
+        </div>
+        <div>set sunG:
+            <input type="range" min="0" max="1" value="0.7" class="slider" id="sunGInput" step="0.05" oninput="setSunG()">
+        </div>
+        <div>set sunB:
+            <input type="range" min="0" max="1" value="0.7" class="slider" id="sunBInput" step="0.05" oninput="setSunB()">
+        </div>
+    </div>
+</div>
 <div>Черный Кирилл Р3411</div>
 <script src="main.js"></script>
 <script src="gl-matrix.js"></script>
@@ -16,5 +62,6 @@
 <script src="torus.js"></script>
 <script src="sphere.js"></script>
 <script src="ashes.js"></script>
+
 </body>
 </html>
